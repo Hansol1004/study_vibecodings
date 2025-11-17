@@ -1,0 +1,70 @@
+/* General Body Styles */
+body {
+    background-color: #121212;
+    color: #e0e0e0;
+}
+
+/* Navbar Customization */
+.navbar {
+    border-bottom: 1px solid #333;
+}
+
+.navbar-brand {
+    font-weight: bold;
+    color: #00aaff !important; /* Accent color */
+}
+
+/* Hero Carousel */
+#hero-carousel .carousel-item img {
+    height: 400px;
+    object-fit: cover;
+    border-radius: 0.5rem;
+}
+
+/* Section Titles */
+h2 {
+    color: #ffffff;
+    border-bottom: 2px solid #00aaff;
+    padding-bottom: 10px;
+    display: inline-block;
+}
+
+/* Game Card Customization */
+.card {
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    border: 1px solid #444;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 170, 255, 0.2); /* Accent color shadow */
+}
+
+.card-img-top {
+    height: 400px; /* Fixed height for uniform card images */
+    object-fit: cover;
+}
+
+.card-title {
+    color: #ffffff;
+}
+
+.card-body {
+    background-color: #1c1c1c;
+}
+
+.card .btn-primary {
+    background-color: #00aaff;
+    border-color: #00aaff;
+    font-weight: bold;
+}
+
+.card .btn-primary:hover {
+    background-color: #0088cc;
+    border-color: #0088cc;
+}
+
+/* Footer */
+footer {
+    border-top: 1px solid #333;
+}
