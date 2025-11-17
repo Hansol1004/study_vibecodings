@@ -20,3 +20,227 @@ markdown파일도 같은 이름으로 따로 만들고, 공백으로 남겨둘 �
 
 https://store.epicgames.com/
 ```
+
+## 결과 html
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vibe Codings - Game Hub</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <style>
+        /* General Body Styles */
+        body {
+            background-color: #121212;
+            color: #e0e0e0;
+        }
+
+        /* Navbar Customization */
+        .navbar {
+            border-bottom: 1px solid #333;
+        }
+
+        .navbar-brand {
+            font-weight: bold;
+            color: #00aaff !important; /* Accent color */
+        }
+
+        /* Hero Carousel */
+        #hero-carousel .carousel-item img {
+            height: 400px;
+            object-fit: cover;
+            border-radius: 0.5rem;
+        }
+
+        /* Section Titles */
+        h2 {
+            color: #ffffff;
+            border-bottom: 2px solid #00aaff;
+            padding-bottom: 10px;
+            display: inline-block;
+        }
+
+        /* Game Card Customization */
+        .card {
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+            border: 1px solid #444;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 170, 255, 0.2); /* Accent color shadow */
+        }
+
+        .card-img-top {
+            height: 400px; /* Fixed height for uniform card images */
+            object-fit: cover;
+        }
+
+        .card-title {
+            color: #ffffff;
+        }
+
+        .card-body {
+            background-color: #1c1c1c;
+        }
+
+        .card .btn-primary {
+            background-color: #00aaff;
+            border-color: #00aaff;
+            font-weight: bold;
+        }
+
+        .card .btn-primary:hover {
+            background-color: #0088cc;
+            border-color: #0088cc;
+        }
+
+        /* Footer */
+        footer {
+            border-top: 1px solid #333;
+        }
+    </style>
+</head>
+<body data-bs-theme="dark">
+
+    <!-- Navigation Bar -->
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="#">Vibe Gaming</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="#">스토어</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">PC 게임</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">모바일 게임</a>
+                        </li>
+                    </ul>
+                    <form class="d-flex">
+                        <input class="form-control me-2" type="search" placeholder="검색" aria-label="Search">
+                        <button class="btn btn-outline-success" type="submit">검색</button>
+                    </form>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container my-5">
+        <!-- Hero Section (Carousel) -->
+        <section id="hero-carousel" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <img src="https://via.placeholder.com/1200x400/0000FF/FFFFFF?text=Featured+Game+1" class="d-block w-100" alt="추천 게임 1">
+                </div>
+                <div class="carousel-item">
+                    <img src="https://via.placeholder.com/1200x400/8A2BE2/FFFFFF?text=Featured+Game+2" class="d-block w-100" alt="추천 게임 2">
+                </div>
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#hero-carousel" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#hero-carousel" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
+        </section>
+
+        <!-- Game List Section -->
+        <section class="mt-5">
+            <h2 class="mb-4">주요 게임</h2>
+            <div id="game-list-container" class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
+                <!-- 게임 카드는 JavaScript로 동적으로 채워집니다. -->
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white text-center p-4 mt-5">
+        <div class="container">
+            <p>&copy; 2025 Vibe Codings. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script>
+        // 샘플 게임 데이터
+        const gameData = [
+            {
+                title: "사이버펑크 2077",
+                genre: "RPG",
+                imageUrl: "https://via.placeholder.com/300x400/FFD700/000000?text=Cyberpunk"
+            },
+            {
+                title: "The Witcher 3: Wild Hunt",
+                genre: "RPG",
+                imageUrl: "https://via.placeholder.com/300x400/DC143C/FFFFFF?text=Witcher+3"
+            },
+            {
+                title: "Grand Theft Auto V",
+                genre: "액션 어드벤처",
+                imageUrl: "https://via.placeholder.com/300x400/20B2AA/FFFFFF?text=GTA+V"
+            },
+            {
+                title: "League of Legends",
+                genre: "MOBA",
+                imageUrl: "https://via.placeholder.com/300x400/4682B4/FFFFFF?text=LoL"
+            },
+            {
+                title: "배틀그라운드",
+                genre: "배틀로얄",
+                imageUrl: "https://via.placeholder.com/300x400/FFA500/000000?text=PUBG"
+            },
+            {
+                title: "Overwatch 2",
+                genre: "FPS",
+                imageUrl: "https://via.placeholder.com/300x400/FFFFFF/000000?text=Overwatch+2"
+            },
+            {
+                title: "원신",
+                genre: "RPG",
+                imageUrl: "https://via.placeholder.com/300x400/ADD8E6/000000?text=Genshin"
+            },
+            {
+                title: "Alan Wake 2",
+                genre: "서바이벌 호러",
+                imageUrl: "https://via.placeholder.com/300x400/36454F/FFFFFF?text=Alan+Wake+2"
+            }
+        ];
+
+        // DOM이 로드된 후 실행
+        document.addEventListener('DOMContentLoaded', () => {
+            const gameListContainer = document.getElementById('game-list-container');
+
+            if (gameListContainer) {
+                gameData.forEach(game => {
+                    const cardCol = document.createElement('div');
+                    cardCol.className = 'col';
+
+                    cardCol.innerHTML = `
+                        <div class="card h-100 bg-dark text-white border-secondary">
+                            <img src="${game.imageUrl}" class="card-img-top" alt="${game.title}">
+                            <div class="card-body">
+                                <h5 class="card-title">${game.title}</h5>
+                                <p class="card-text text-muted">${game.genre}</p>
+                                <a href="#" class="btn btn-primary">더 보기</a>
+                            </div>
+                        </div>
+                    `;
+                    gameListContainer.appendChild(cardCol);
+                });
+            }
+        });
+    </script>
+</body>
+</html>
