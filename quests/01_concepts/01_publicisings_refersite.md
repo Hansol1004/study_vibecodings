@@ -18,3 +18,5 @@
 https://github.com/learnbook1103-design/study_vibecodings/blob/main/quest/pubilshings/20_vibecordings_conceps/index.html
 
 ``` 
+## 출력 html
+[https://Hansol1004.github.io/study_vibecodings/quests/01_concepts/01_publicisings_refersite.html](01_publicisings_refersite.html)
