@@ -20,10 +20,9 @@
 https://hansol1004.github.io/study_vibecodings/quests/01_concepts/01_publicisings_refersite.html
 
 {참조 html}
-
-http://192.168.0.143:5500/docs/vibecodings/02_refer.html
-
 ```
+[http://192.168.0.143:5500/docs/vibecodings/02_refer.html]
+
 
 ## 참조html 제작 프롬프트
 ```
