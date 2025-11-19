@@ -50,4 +50,4 @@ https://startbootstrap.com/template/sb-admin
 ```
 
 ## 결과 html
-[http://192.168.0.143:5500/docs/vibecodings/02_publicisings_createsite.html](02_publicisings_createsite.html)
+[https://hansol1004.github.io/study_vibecodings/docs/vibecodings/02_publicisings_createsite.html](02_publicisings_createsite.html)
