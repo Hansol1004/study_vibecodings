@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>관리자 대시보드 - 제품 관리 (CRUD)</title>
+    <!-- Bootstrap 5 CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons (for a better admin look) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <style>
+        :root {
+            --sidebar-width: 250px;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8f9fa; /* Light gray background */
+        }
+        /* Sidebar Styling */
+        #sidebar-wrapper {
+            min-height: 100vh;
+            margin-left: calc(var(--sidebar-width) * -1);
+            transition: margin 0.25s ease-out;
+            width: var(--sidebar-width);
+        }
+        #sidebar-wrapper .sidebar-heading {
+            padding: 0.875rem 1.25rem;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: white;
+            background-color: #343a40; /* Dark background */
+        }
+        #sidebar-wrapper .list-group {
+            width: var(--sidebar-width);
+        }
+        /* Page Content Styling */
+        #page-content-wrapper {
+            min-width: 100vw;
+        }
+        /* Toggle Effect */
+        body.sb-sidenav-toggled #sidebar-wrapper {
+            margin-left: 0;
+        }
+        @media (min-width: 768px) {
+            #sidebar-wrapper {
+                margin-left: 0;
+            }
+            #page-content-wrapper {
+                min-width: 0;
+                width: 100%;
+            }
+            body.sb-sidenav-toggled #sidebar-wrapper {
+                margin-left: calc(var(--sidebar-width) * -1);
+            }
+            .content-area {
+                padding-left: var(--sidebar-width);
+            }
+        }
+        /* Active menu item */
+        .list-group-item.active-menu {
+            color: #fff !important;
+            background-color: #0d6efd !important;
+            border-color: #0d6efd !important;
+        }
+        .list-group-item {
+            cursor: pointer;
+            transition: background-color 0.2s;
+            border-radius: 0.5rem;
+            margin: 0 0.5rem;
+        }
+        .card {
+            border-radius: 0.75rem;
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.05);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="d-flex" id="wrapper">
+        <!-- Sidebar -->
+        <div class="bg-dark text-white border-end" id="sidebar-wrapper">
+            <div class="sidebar-heading">Admin Dashboard</div>
+            <div class="list-group list-group-flush pt-3">
+                <!-- Main Menu -->
+                <a href="#" class="list-group-item list-group-item-action bg-dark text-white border-0 py-2 active-menu" data-page="dashboard">
+                    <i class="bi bi-house-door-fill me-2"></i> 대시보드
+                </a>
+
+                <!-- Sub Menu 1: Management -->
+                <a href="#management-menu" class="list-group-item list-group-item-action bg-dark text-white border-0 py-2 collapsed" data-bs-toggle="collapse" role="button" aria-expanded="false">
+                    <i class="bi bi-gear-fill me-2"></i> 관리
+                </a>
+                <div class="collapse ms-3" id="management-menu">
+                    <a href="#" class="list-group-item list-group-item-action bg-dark text-white border-0 py-2" data-page="product-crud">
+                        <i class="bi bi-box me-2"></i> 제품 관리 (CRUD)
+                    </a>
+                    <a href="#" class="list-group-item list-group-item-action bg-dark text-white border-0 py-2" data-page="user-list">
+                        <i class="bi bi-people me-2"></i> 사용자 목록
+                    </a>
+                </div>
+
+                <!-- Sub Menu 2: Settings -->
+                <a href="#settings-menu" class="list-group-item list-group-item-action bg-dark text-white border-0 py-2 collapsed" data-bs-toggle="collapse" role="button" aria-expanded="false">
+                    <i class="bi bi-sliders me-2"></i> 설정
+                </a>
+                <div class="collapse ms-3" id="settings-menu">
+                    <a href="#" class="list-group-item list-group-item-action bg-dark text-white border-0 py-2" data-page="account-settings">
+                        <i class="bi bi-person-gear me-2"></i> 계정 설정
+                    </a>
+                </div>
+            </div>
+        </div>
+        <!-- /Sidebar -->
+
+        <!-- Page Content Wrapper -->
+        <div id="page-content-wrapper">
+            <!-- Top navigation (Navbar) -->
+            <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom shadow-sm">
+                <div class="container-fluid">
+                    <button class="btn btn-primary" id="sidebarToggle"><i class="bi bi-list"></i> 메뉴 토글</button>
+                    <div class="dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-person-circle me-1"></i> 관리자
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" href="#" data-page="account-settings">설정</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#">로그아웃</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+            <!-- /Top navigation -->
+
+            <!-- Main Content Area -->
+            <div class="container-fluid py-4" id="main-content">
+                <!-- Content will be dynamically loaded here -->
+            </div>
+            <!-- /Main Content Area -->
+        </div>
+        <!-- /Page Content Wrapper -->
+    </div>
+
+    <!-- Modal for Create/Update CRUD Operations -->
+    <div class="modal fade" id="productModal" tabindex="-1" aria-labelledby="productModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="productModalLabel">제품 추가/수정</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="productForm">
+                        <input type="hidden" id="product-id">
+                        <div class="mb-3">
+                            <label for="product-name" class="form-label">제품명</label>
+                            <input type="text" class="form-control" id="product-name" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="product-price" class="form-label">가격</label>
+                            <input type="number" class="form-control" id="product-price" required min="0">
+                        </div>
+                        <div class="mb-3">
+                            <label for="product-stock" class="form-label">재고</label>
+                            <input type="number" class="form-control" id="product-stock" required min="0">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                    <button type="button" class="btn btn-primary" id="saveProductBtn">저장</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap 5 JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // 전역 변수 설정
+        const sidebarToggle = document.getElementById('sidebarToggle');
+        const mainContent = document.getElementById('main-content');
+        const navLinks = document.querySelectorAll('.list-group-item');
+
+        // CRUD 데이터 (인메모리 저장소)
+        let products = [
+            { id: 1, name: '노트북 Pro', price: 1500000, stock: 50 },
+            { id: 2, name: '스마트폰 X', price: 950000, stock: 120 },
+            { id: 3, name: '무선 이어폰', price: 120000, stock: 300 }
+        ];
+        let nextProductId = 4;
+
+        // --- 1. 대시보드 및 메뉴 관리 기능 ---
+
+        /**
+         * 사이드바 토글 기능
+         */
+        if (sidebarToggle) {
+            sidebarToggle.addEventListener('click', function(event) {
+                event.preventDefault();
+                document.body.classList.toggle('sb-sidenav-toggled');
+            });
+        }
+
+        /**
+         * 페이지 콘텐츠를 동적으로 로드하고 메뉴 활성화 상태를 업데이트
+         * @param {string} pageKey - 로드할 페이지의 키 (e.g., 'dashboard', 'product-crud')
+         */
+        function loadContent(pageKey) {
+            mainContent.innerHTML = '';
+            let contentHtml = '';
+            let pageTitle = '';
+
+            // 메뉴 활성화 상태 업데이트
+            navLinks.forEach(link => link.classList.remove('active-menu'));
+            const activeLink = document.querySelector(`[data-page="${pageKey}"]`);
+            if (activeLink) {
+                activeLink.classList.add('active-menu');
+                // 부모 collapse 메뉴도 열어주기
+                const parentCollapse = activeLink.closest('.collapse');
+                if (parentCollapse) {
+                    new bootstrap.Collapse(parentCollapse, { toggle: true });
+                }
+            }
+
+
+            // 페이지 키에 따른 콘텐츠 생성
+            switch (pageKey) {
+                case 'dashboard':
+                    pageTitle = '대시보드';
+                    contentHtml = createDashboardContent();
+                    break;
+                case 'product-crud':
+                    pageTitle = '제품 관리 (CRUD)';
+                    contentHtml = createProductCrudContent();
+                    // CRUD 기능은 이 함수 호출 후 별도로 초기화 필요
+                    break;
+                case 'user-list':
+                    pageTitle = '사용자 목록';
+                    contentHtml = createSimpleCardContent('사용자 목록', '시스템에 등록된 사용자들의 목록을 표시합니다.');
+                    break;
+                case 'account-settings':
+                    pageTitle = '계정 설정';
+                    contentHtml = createSimpleCardContent('계정 설정', '사용자 계정 정보 및 보안 설정을 변경할 수 있습니다.');
+                    break;
+                default:
+                    pageTitle = '404 - 페이지를 찾을 수 없음';
+                    contentHtml = `<p class="alert alert-danger">요청한 페이지를 찾을 수 없습니다.</p>`;
+            }
+
+            // 제목과 콘텐츠를 메인 영역에 삽입
+            mainContent.innerHTML = `
+                <h1 class="mt-4 mb-4">${pageTitle}</h1>
+                ${contentHtml}
+            `;
+
+            // CRUD 페이지의 경우, 기능 초기화
+            if (pageKey === 'product-crud') {
+                initProductCrud();
+            }
+        }
+
+        /**
+         * 대시보드 페이지 콘텐츠 생성
+         */
+        function createDashboardContent() {
+            return `
+                <div class="row">
+                    <!-- Example Card 1 -->
+                    <div class="col-xl-3 col-md-6 mb-4">
+                        <div class="card bg-primary text-white h-100">
+                            <div class="card-body">
+                                <div class="row align-items-center">
+                                    <div class="col">
+                                        <div class="fs-5 fw-bold text-uppercase mb-1">총 매출</div>
+                                        <div class="h3 mb-0 fw-bold">12,345,000 원</div>
+                                    </div>
+                                    <div class="col-auto"><i class="bi bi-currency-dollar fs-1"></i></div>
+                                </div>
+                            </div>
+                            <div class="card-footer d-flex align-items-center justify-content-between">
+                                <a class="small text-white stretched-link text-decoration-none" href="#">자세히 보기</a>
+                                <div class="small text-white"><i class="bi bi-arrow-right"></i></div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Example Card 2 -->
+                    <div class="col-xl-3 col-md-6 mb-4">
+                        <div class="card bg-success text-white h-100">
+                            <div class="card-body">
+                                <div class="row align-items-center">
+                                    <div class="col">
+                                        <div class="fs-5 fw-bold text-uppercase mb-1">신규 주문</div>
+                                        <div class="h3 mb-0 fw-bold">24 건</div>
+                                    </div>
+                                    <div class="col-auto"><i class="bi bi-bag fs-1"></i></div>
+                                </div>
+                            </div>
+                            <div class="card-footer d-flex align-items-center justify-content-between">
+                                <a class="small text-white stretched-link text-decoration-none" href="#">자세히 보기</a>
+                                <div class="small text-white"><i class="bi bi-arrow-right"></i></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                         <div class="card mb-4">
+                            <div class="card-header bg-white"><i class="bi bi-bar-chart-fill me-1"></i> 월별 판매 추이</div>
+                            <div class="card-body">
+                                <p class="text-muted">실제 차트 라이브러리(e.g., Chart.js) 대신 임시 텍스트를 사용합니다.</p>
+                                <div style="height: 300px; background-color: #f0f0f0; border-radius: 0.5rem; display: flex; align-items: center; justify-content: center; color: #6c757d;">
+                                    차트 영역
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        /**
+         * 단순 카드 콘텐츠 생성
+         */
+        function createSimpleCardContent(title, body) {
+            return `
+                <div class="card">
+                    <div class="card-header bg-white"><i class="bi bi-info-circle-fill me-1"></i> ${title}</div>
+                    <div class="card-body">
+                        <p>${body}</p>
+                    </div>
+                </div>
+            `;
+        }
+
+        // 메뉴 클릭 이벤트 리스너 설정
+        navLinks.forEach(link => {
+            link.addEventListener('click', function(event) {
+                const pageKey = this.getAttribute('data-page');
+                if (pageKey) {
+                    event.preventDefault();
+                    loadContent(pageKey);
+                }
+            });
+        });
+
+        // --- 2. CRUD 기능 (제품 관리) ---
+
+        /**
+         * 제품 관리 (CRUD) 페이지 콘텐츠 생성
+         */
+        function createProductCrudContent() {
+            return `
+                <div class="card mb-4">
+                    <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                        <div><i class="bi bi-table me-1"></i> 제품 목록</div>
+                        <button class="btn btn-primary" id="addProductBtn"><i class="bi bi-plus-lg me-1"></i> 제품 추가</button>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-hover" id="productTable">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>제품명</th>
+                                        <th>가격</th>
+                                        <th>재고</th>
+                                        <th>액션</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Product rows will be inserted here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        /**
+         * 제품 목록을 테이블에 렌더링 (Read)
+         */
+        function renderProductTable() {
+            const tbody = document.querySelector('#productTable tbody');
+            if (!tbody) return;
+
+            tbody.innerHTML = products.map(product => `
+                <tr>
+                    <td>${product.id}</td>
+                    <td>${product.name}</td>
+                    <td>${product.price.toLocaleString()} 원</td>
+                    <td>${product.stock} 개</td>
+                    <td>
+                        <button class="btn btn-sm btn-info text-white edit-btn me-2" data-id="${product.id}" title="수정"><i class="bi bi-pencil-square"></i></button>
+                        <button class="btn btn-sm btn-danger delete-btn" data-id="${product.id}" title="삭제"><i class="bi bi-trash"></i></button>
+                    </td>
+                </tr>
+            `).join('');
+
+            // 이벤트 리스너 재부착
+            attachCrudListeners();
+        }
+
+        /**
+         * CRUD 버튼에 이벤트 리스너 부착
+         */
+        function attachCrudListeners() {
+            // 수정 버튼 (Update)
+            document.querySelectorAll('.edit-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const id = parseInt(this.getAttribute('data-id'));
+                    editProduct(id);
+                });
+            });
+
+            // 삭제 버튼 (Delete)
+            document.querySelectorAll('.delete-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const id = parseInt(this.getAttribute('data-id'));
+                    deleteProduct(id);
+                });
+            });
+        }
+
+        /**
+         * 제품 추가/수정 모달 초기화
+         */
+        const productModal = new bootstrap.Modal(document.getElementById('productModal'));
+        const productForm = document.getElementById('productForm');
+        const saveProductBtn = document.getElementById('saveProductBtn');
+        const modalTitle = document.getElementById('productModalLabel');
+
+        /**
+         * 새로운 제품 추가 버튼 클릭 핸들러 (Create)
+         */
+        function handleAddProductClick() {
+            modalTitle.textContent = '제품 추가';
+            productForm.reset();
+            document.getElementById('product-id').value = ''; // ID 초기화
+            productModal.show();
+        }
+
+        /**
+         * 제품 수정 기능 (Update)
+         * @param {number} id - 수정할 제품 ID
+         */
+        function editProduct(id) {
+            const product = products.find(p => p.id === id);
+            if (product) {
+                modalTitle.textContent = '제품 수정';
+                document.getElementById('product-id').value = product.id;
+                document.getElementById('product-name').value = product.name;
+                document.getElementById('product-price').value = product.price;
+                document.getElementById('product-stock').value = product.stock;
+                productModal.show();
+            } else {
+                console.error('제품을 찾을 수 없습니다.');
+            }
+        }
+
+        /**
+         * 제품 저장 (Create/Update 처리)
+         */
+        function saveProduct() {
+            const idInput = document.getElementById('product-id');
+            const id = idInput.value ? parseInt(idInput.value) : null;
+            const name = document.getElementById('product-name').value.trim();
+            const price = parseInt(document.getElementById('product-price').value);
+            const stock = parseInt(document.getElementById('product-stock').value);
+
+            if (!name || isNaN(price) || isNaN(stock)) {
+                alert('모든 필드를 올바르게 입력해주세요.');
+                return;
+            }
+
+            if (id) {
+                // Update
+                const index = products.findIndex(p => p.id === id);
+                if (index !== -1) {
+                    products[index] = { id, name, price, stock };
+                }
+            } else {
+                // Create
+                const newProduct = {
+                    id: nextProductId++,
+                    name,
+                    price,
+                    stock
+                };
+                products.push(newProduct);
+            }
+
+            renderProductTable();
+            productModal.hide();
+        }
+
+        /**
+         * 제품 삭제 기능 (Delete)
+         * @param {number} id - 삭제할 제품 ID
+         */
+        function deleteProduct(id) {
+            if (confirm('정말로 이 제품을 삭제하시겠습니까?')) {
+                products = products.filter(p => p.id !== id);
+                renderProductTable();
+                // 사용자에게 성공 메시지를 보여주는 UI 로직 추가 가능
+            }
+        }
+
+        /**
+         * 제품 CRUD 기능 초기화 (페이지 로드 시 호출)
+         */
+        function initProductCrud() {
+            renderProductTable();
+
+            const addProductBtn = document.getElementById('addProductBtn');
+            if (addProductBtn) {
+                addProductBtn.addEventListener('click', handleAddProductClick);
+            }
+
+            if (saveProductBtn) {
+                saveProductBtn.addEventListener('click', saveProduct);
+            }
+        }
+
+        // 초기 로드: 대시보드 페이지 로드
+        window.onload = function() {
+            loadContent('dashboard');
+        };
+
+        // 초기화 시 모달 이벤트 리스너 제거 방지
+        document.addEventListener('DOMContentLoaded', () => {
+             // 페이지 로드 시 CRUD 관련 버튼 이벤트는 initProductCrud에서 처리되므로,
+             // 전역 버튼에 대한 리스너는 여기서만 설정합니다.
+        });
+
+    </script>
+</body>
+</html>
